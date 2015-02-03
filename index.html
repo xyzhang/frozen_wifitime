@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<!-- saved from url=(0066)http://wevas.info/vipstyle/mobile/client/wifi/credit/v2/index.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<title>获取时长</title>
+	<link rel="stylesheet" href="./css/global.css">
+	<link rel="stylesheet" href="./css/style.css">
+</head>
+<body ontouchstart="">
+<div class="wrapper">
+
+    <header>
+      <div class="header-wrapper">
+        <div class="header-inner">
+          <div class="dashboard">
+            <div class="number">
+              <span>03</span>:<span>10</span>:<span>00</span>
+            </div>
+            <div class="tip">剩余WiFi时长</div>
+          </div>
+          <div class="waves" style="-webkit-transform: rotate(0deg);">
+            <div class="w1"></div>
+            <div class="w2"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <h3 class="title">推荐任务(<span>2</span>)</h3>
+    <ul class="ui-list list-function">
+      <li>
+        <div class="thumb">
+          <span>30</span>
+          <span>分钟</span>
+        </div>
+        <div class="info ui-border-top">
+          <h3>开通QQ会员</h3>
+          <p>开通年费QQ会员即可获得90分钟免费WiFi。</p>
+        </div>
+        <div class="ui-btn use">使用</div>
+      </li>
+      <li class="ui-border-top">
+        <div class="thumb">
+          <span>60</span>
+          <span>分钟</span>
+        </div>
+        <div class="info ">
+          <h3>充话费</h3>
+          <p>在QQ钱包为手机充值100元以上话费即可获得60分钟免费WiFi。</p>
+        </div>
+        <div class="ui-btn">获取</div>
+      </li>
+    </ul>
+
+    <div class="title-wrapper">
+      <h3 class="title">更多任务(<span>3</span>)</h3>
+      <a href="http://wevas.info/vipstyle/mobile/client/wifi/credit/v2/index.html#" class="icon-switch"></a>
+    </div>
+
+    <ul class="ui-list list-function">
+      <li class="ui-border-top">
+        <div class="thumb">
+          <span>30</span>
+          <span>分钟</span>
+        </div>
+        <div class="info ui-border-top">
+          <h3>购买大众点评优惠券</h3>
+          <p>在手机QQ－吃喝玩乐购买任意大众点评卷即可获得。</p>
+        </div>
+        <div class="ui-btn use">使用</div>
+      </li>
+      <li class="ui-border-top">
+        <div class="thumb">
+          <span>90</span>
+          <span>分钟</span>
+        </div>
+        <div class="info">
+          <h3>下载应用宝</h3>
+          <p>在应用商店下载并安装应用宝app即可获得。</p>
+        </div>
+        <div class="ui-btn">获取</div>
+      </li>
+    </ul>
+
+</div>
+
+
+<!-- 添加 show 类显示 -->
+<div class="ui-dialog">
+    <div class="dialog-container">
+      <i class="icon-close">关闭</i>
+        <div class="dialog-body">
+            <div>开通年费QQ会员即可领取欢乐斗地主感恩节回馈礼包！</div>
+        </div>
+        <div class="dialog-footer ui-btn-group">
+            <button type="button">取消</button>
+            <button type="button">开通</button>
+        </div>
+    </div>
+</div>
+
+<script src="./js/zepto.min.js"></script>
+<script>
+(function() {
+
+  var $stick = $('.waves');
+  var $header = $('.header-inner');
+
+  window.addEventListener('deviceorientation', orientationListener, false);
+
+  function orientationListener(evt) {
+    evt.gamma = (evt.x * (180 / Math.PI));  //转换成角度值
+    evt.beta = (evt.y * (180 / Math.PI));
+    evt.alpha = (evt.z * (180 / Math.PI));
+
+    var gamma = evt.gamma;
+    var beta  = evt.beta;
+    var alpha = evt.alpha;
+
+    if (evt.accelerationIncludingGravity) {
+      window.removeEventListener('deviceorientation', this.orientationListener, false);
+      gamma = event.accelerationIncludingGravity.x*10;
+      beta  = -event.accelerationIncludingGravity.y*10;
+      alpha = event.accelerationIncludingGravity.z*10;
+    }
+
+    if (this._lastGamma != gamma || this._lastBeta != beta) {
+
+      gamma = gamma.toFixed(0);
+      beta  = beta.toFixed(0);
+      alpha = alpha !== null ? alpha.toFixed(0) : 0;
+
+      if (gamma > 60 && gamma < 90) {
+        gamma = 60;
+      }
+      else if (gamma > -90 && gamma < -60) {
+        gamma = -60;
+      }
+      else if (gamma <= -90 || gamma >= 90) {
+        gamma = 0;
+      }
+
+      if (beta > 0) {
+          $stick.css({
+            '-webkit-transform': "rotate("+-gamma+"deg)"
+          })
+      }
+
+      this._lastGamma = gamma;
+      this._lastBeta = beta;
+    }
+  }
+
+
+  $('.use').on('click', function(evt) {
+
+    if (!$header.hasClass('pulse')) {
+      var $thumb = $(this).siblings('.thumb');
+      var $clone = $thumb.clone();
+
+      $clone.appendTo('.wrapper').css({
+        'position': 'absolute',
+        'left': $thumb.offset().left,
+        'top': $thumb.offset().top + $thumb.height()*0.17,
+        'opacity': 0,
+        '-webkit-transform': 'translate('+($(window).width()/2-20)+'px, '+(80-$(this).offset().top)+'px)'
+      });
+
+      setTimeout(function() {
+        $clone.remove();
+        $header.addClass('pulse');
+      }, 600);
+    }
+  })
+
+  $header.on('webkitAnimationEnd', function() {
+    $header.removeClass('pulse');
+  })
+
+
+})()
+</script>
+
+</body></html>
